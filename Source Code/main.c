@@ -236,24 +236,23 @@ void deletebooks()    //function that delete from file fp
     while(another=='y')  	//cause infinite loop
     {
 		system("cls");
-		findbook='a';
 		gotoxy(10,5);
-		printf("Enter the Book ID to  delete:");
+		printf("Enter the Book ID to  delete --->");
 		scanf("%d",&d);
 		fp=fopen("Project.dat","rb+");
 		rewind(fp);
+		findbook='a';
 		while(fread(&r,sizeof(r),1,fp)==1)
 		{
 			if(r.id==d)
 			{
-
-			gotoxy(10,7);
-			printf("The book record is available");
-			gotoxy(10,8);
-			printf("Book name is %s",r.name);
-			gotoxy(10,9);
-			printf("Book No. is %d",r.bookno);
-			findbook='t';
+				gotoxy(10,7);
+				printf("The book record is available");
+				gotoxy(10,8);
+				printf("Book name is %s",r.name);
+				gotoxy(10,9);
+				printf("Book No. is %d",r.bookno);
+				findbook='t';
 			}
 		}
 		if(findbook!='t')
@@ -267,40 +266,39 @@ void deletebooks()    //function that delete from file fp
 		{
 			gotoxy(10,9);
 			printf("Do you want to delete it?(Y/N):");
-			if(getch()=='y')
+			if(getch()=='y'||getch()=='Y')
 			{
-			ft=fopen("temp.dat","wb+");   //for deleting temporary files
-			rewind(fp);					//sets the file position to the beginning of the file of the given stream
-			while(fread(&r,sizeof(r),1,fp)==1)
-			{
-				if(r.id!=d)
+				ft=fopen("temp.dat","wb+");   //for deleting temporary files
+				rewind(fp);					//sets the file position to the beginning of the file of the given stream
+				while(fread(&r,sizeof(r),1,fp)==1)
 				{
-				fseek(ft,0,SEEK_CUR);			//sets current position of file
-				fwrite(&r,sizeof(r),1,ft); 	  //write all items in temporary file except we want to delete
-				}                              
+					if(r.id!=d)
+					{
+						fseek(ft,0,SEEK_CUR);			//sets current position of file
+						fwrite(&r,sizeof(r),1,ft); 	  //write all items in temporary file except we want to delete
+					}                              
+				}
+				fclose(ft);
+				fclose(fp);
+				remove("Project.dat");
+				rename("temp.dat","Project.dat"); 		//read all items from temporary file except we want to delet
+				if(findbook=='t')
+				{
+					gotoxy(10,10);
+					printf("The record is sucessfully deleted");
+					gotoxy(10,11);
+					printf("Delete another record?(Y/N)");
+				}
 			}
-			fclose(ft);
-			fclose(fp);
-			remove("Project.dat");
-			rename("temp.dat","Project.dat"); 		//read all items from temporary file except we want to delete
-			fp=fopen("Project.dat","rb+");    
-			if(findbook=='t')
-			{
-				gotoxy(10,10);
-				printf("The record is sucessfully deleted");
-				gotoxy(10,11);
-				printf("Delete another record?(Y/N)");
-			}
-			}
-		else
-		mainmenu();
-		fflush(stdin);		//the fflush function causes any unwritten data for that stream to be delivered to the host environment to be written to the file,
-							//so the behaviour is undefined
-		another=getch();
+			else
+				mainmenu();
+			fflush(stdin);		//the fflush function causes any unwritten data for that stream to be delivered to the host environment to be written to the file,
+								//so the behaviour is undefined
+			another=getch();
 		}
 	}
-    gotoxy(10,15);
-    mainmenu();
+	gotoxy(10,15);
+	mainmenu();
 }
 void searchbooks()	    //function that search items from file fp
 {
