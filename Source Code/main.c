@@ -1,3 +1,4 @@
+//ALL THE LIBRARIES DEFINED FROM HERE
 #include<stdio.h>         
 #include<conio.h>         
 #include <stdlib.h>	
@@ -6,7 +7,15 @@
 #include<dos.h>           
 #include<time.h>
 #include <windows.h>
-#define RETURNTIME 10 	// contains return date, etc 	
+
+//LIST OF MACROS DEFINED HERE
+#define RETURNTIME 10 	// contains return date, etc
+#define MAX_YR  9999
+#define MIN_YR  1900
+#define MAX_SIZE_USER_NAME 30
+#define MAX_SIZE_PASSWORD  20
+#define FILE_HEADER_SIZE  sizeof(sFileHeader)
+#define FILE_NAME  "password"	
 char catagories[][16]={"Mathematics","Psycology","Biology","PHYSICS","CHEMISTRY","English"}; 	
 void greeting(void);
 void login(void);
@@ -50,9 +59,9 @@ struct books
     char name[20];
     char Writer[20];
     int quantity;
-    float Amount;
+    int Amount;
     int bookno;
-    char *cat;
+    char cat[16];
     struct meroDate issued;
     struct meroDate duedate;
 };
@@ -179,7 +188,7 @@ void addbooks(void)    //function to add books
 	fp=fopen("Project.dat","ab+");
 	if(getdata()==1)
 	{
-		r.cat=catagories[s-1];
+		strcpy(r.cat,catagories[s-1]);
 		printf("%s",r.cat);		
 		fseek(fp,0,SEEK_END);			//fseek sets the file position of the given offset
 		fwrite(&r,sizeof(r),1,fp);		//size_r this is the unsigned integral type and is the result of the sizeof keyword.
@@ -199,7 +208,7 @@ int getdata()
 	printf("\n\t\t\tENTER THE INFORMATION BELOW");
 	printf("\n\n\t\t\tDEPARTMENT --->");
 	printf("%s",catagories[s-1]);
-	printf("\n\n\t\t\tENTER BOOK ID --->\t");
+	printf("\n\n\t\t\tENTER BOOK ID --->");
 	scanf("%d",&t);
 	if(checkid(t) == 0)
 	{
@@ -224,7 +233,7 @@ int getdata()
 	scanf("%d",&r.quantity);
 	printf("\n\n\t\t\tENTER PRICE OF PER BOOK --->");
 	fflush(stdin);
-	scanf("%f",&r.Amount);
+	scanf("%d",&r.Amount);
 
 	return 1;
 }
@@ -710,23 +719,25 @@ void bookslist(void)  	//function for showing the list of books available in lib
     gotoxy(1,1);
     printf("                              Book List                                   \n");
     gotoxy(2,2);
-    printf(" BOOK NAME	BOOK ID    BOOK NO     WRITER       QTY     AMOUNT");
+    printf(" DEPARTMENT      BOOK NAME	  BOOK ID     BOOK NO     WRITER      QTY     AMOUNT");
     j=4;
     fp=fopen("Project.dat","rb");
     while(fread(&r,sizeof(r),1,fp)==1)
     {
 		gotoxy(3,j);
+		printf("%s",r.cat);
+		gotoxy(19,j);
 		printf("%s",r.name);
-		gotoxy(16,j);
+		gotoxy(34,j);
 		printf("%d",r.id);
-		gotoxy(27,j);
+		gotoxy(46,j);
 		printf("%d",r.bookno);
-		gotoxy(39,j);
+		gotoxy(58,j);
 		printf("%s",r.Writer);
-		gotoxy(52,j);
+		gotoxy(70,j);
 		printf("%d",r.quantity);
-		gotoxy(60,j);
-		printf("%.2f",r.Amount);
+		gotoxy(78,j);
+		printf("%d",r.Amount);
 		printf("\n\n");
 		j++;
 		i=i+r.quantity;
