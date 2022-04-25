@@ -361,7 +361,6 @@ void searchbooks()	    //function that search items from file fp
 	    }
 	    if(findbook!='t')  		//it checks weather the condition is entered loop or not
 	    {
-	   
 	    gotoxy(22,9);
 		printf("\rSOORY NO RECORD FOUND");
 	    }
